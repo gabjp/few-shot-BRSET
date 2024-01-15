@@ -32,7 +32,7 @@ def main():
 
     # LOAD DATA
     img_size = tuple( [int(args.img_resize.split(',')[i]) for i in [0,1]] )
-    transform = transforms.Compose([transforms.ToTensor(), transforms.Resize(img_size)])
+    transform = transforms.Resize(img_size)
     tasks = args.tasks.split(',')
 
     train_set = FewShotBRSET(transform=transform, tasks=tasks, split=args.train_set)
