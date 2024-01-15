@@ -30,7 +30,7 @@ class SmallNet(nn.Module):
 		self.conv7 = nn.Conv2d(in_channels=512, out_channels=512,kernel_size=(3, 3))
 		self.maxpool7 = nn.MaxPool2d(kernel_size=(2, 2))
 		
-		self.fc1 = nn.Linear(in_features=6144, out_features=1025)
+		self.fc1 = nn.Linear(in_features=6144, out_features=1024)
 		self.fc2 = nn.Linear(in_features=1024, out_features=512)
 		self.fc3 = nn.Linear(in_features=512, out_features=1)
 
