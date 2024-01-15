@@ -1,8 +1,7 @@
 import os
 import torch
 import pandas as pd
-from skimage import io, transform
-import numpy as np
+from torchvision.io import read_image
 import matplotlib.pyplot as plt
 from torch.utils.data import Dataset, DataLoader
 from torchvision import transforms, utils
