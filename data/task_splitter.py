@@ -76,7 +76,7 @@ def main():
 
         df['split'] = None
 
-        df.loc[df.index.isin(test.index), 'split'] = "train"
+        df.loc[df.index.isin(test.index), 'split'] = "test"
         
         df.loc[df.index.isin(shot_40.index), 'split'] = "40-shot"
 
