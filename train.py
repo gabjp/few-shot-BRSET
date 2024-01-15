@@ -82,7 +82,7 @@ def main():
             opt.zero_grad()
             out = model(images)
 
-            loss = criterion(out, labels)
+            loss = criterion(out, labels.float())
             loss.backward()
             opt.step()
 
