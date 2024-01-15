@@ -101,7 +101,7 @@ def main():
         train_acc.append(total_correct / total_samples * 100)
 
         val_loss, val_acc = test(test_dataloader, model, criterion, device)
-        print(f"[{epoch+1}/{args.epochs}] - Validation loss: {val_loss} - Validation accuracy: {val_acc}")
+        print(f"[{epoch+1}/{args.epochs}] - Validation loss: {val_loss} - Validation accuracy: {val_acc}", flush=True)
         test_loss.append(val_loss)
         test_acc.append(val_acc)
 
