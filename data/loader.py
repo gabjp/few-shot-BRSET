@@ -56,8 +56,8 @@ class FewShotBRSET(Dataset):
         return image, label
 
 ds = FewShotBRSET(split='40-shot', tasks='hemorrhage')
-print(ds[0][1])
-print(ds[-1][1])
+print(ds[0][0])
+print(ds[-1][0])
 print(len(ds))
 
         
