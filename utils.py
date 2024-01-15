@@ -37,8 +37,6 @@ class SmallNet(nn.Module):
 		self.m = nn.Sigmoid()
 		
 	def forward(self,x):
-
-		print(x[0])
 		
 		x = self.conv1(x)
 		x = self.relu(x)
