@@ -51,7 +51,7 @@ def main():
     print(f"TRAINABLE PARAMETERS: {n_trainable}")
 
     # TRAINING SETUP
-    criterion = torch.nn.CrossEntropyLoss()
+    criterion = torch.nn.BCEWithLogitsLoss()
 
     if args.optimizer == "adam":
         opt = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
