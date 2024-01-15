@@ -24,11 +24,11 @@ class SmallNet(nn.Module):
 		self.conv5 = nn.Conv2d(in_channels=128, out_channels=256,kernel_size=(3, 3))
 		self.maxpool5 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
 		
-		self.conv5 = nn.Conv2d(in_channels=256, out_channels=256,kernel_size=(3, 3))
-		self.maxpool5 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
-		
 		self.conv6 = nn.Conv2d(in_channels=256, out_channels=256,kernel_size=(3, 3))
 		self.maxpool6 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
+		
+		self.conv7 = nn.Conv2d(in_channels=256, out_channels=256,kernel_size=(3, 3))
+		self.maxpool7 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
 		
 		self.fc1 = nn.Linear(in_features=3072, out_features=512)
 		self.fc2 = nn.Linear(in_features=512, out_features=256)
@@ -59,6 +59,10 @@ class SmallNet(nn.Module):
 		x = self.conv6(x)
 		x = self.relu(x)
 		x = self.maxpool6(x)
+
+		x = self.conv7(x)
+		x = self.relu(x)
+		x = self.maxpool7(x)
 
 		x = torch.reshape(x, (-1, 3072))
 		x = self.fc1(x)
