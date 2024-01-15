@@ -25,6 +25,7 @@ parser.add_argument("--img-resize", type=str, default="394,508")
 
 def main():
     args = parser.parse_args()
+    print(args)
 
     if not os.path.exists(args.save_path):
         os.makedirs(args.save_path)
@@ -45,6 +46,9 @@ def main():
     if args.checkpoint_path != "":
         checkpoint = torch.load(args.checkpoint_path)
         model.load_state_dict(checkpoint['model_state_dict'], strict=False)
+
+    n_trainable = sum(p.numel() for p in model.parameters() if p.requires_grad)
+    print(f"TRAINABLE PARAMETERS: {n_trainable}")
 
     # TRAINING SETUP
     criterion = torch.nn.CrossEntropyLoss()
