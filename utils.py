@@ -30,9 +30,9 @@ class SmallNet(nn.Module):
 		self.conv7 = nn.Conv2d(in_channels=256, out_channels=256,kernel_size=(3, 3))
 		self.maxpool7 = nn.MaxPool2d(kernel_size=(2, 2))
 		
-		self.fc1 = nn.Linear(in_features=3072, out_features=512)
-		self.fc2 = nn.Linear(in_features=512, out_features=256)
-		self.fc3 = nn.Linear(in_features=256, out_features=2)
+		self.fc1 = nn.Linear(in_features=512, out_features=256)
+		self.fc2 = nn.Linear(in_features=256, out_features=128)
+		self.fc3 = nn.Linear(in_features=128, out_features=2)
 		
 	def forward(self,x):
 		
@@ -63,11 +63,8 @@ class SmallNet(nn.Module):
 		x = self.conv7(x)
 		x = self.relu(x)
 		x = self.maxpool7(x)
-
-		print(x.size())
 		
 		x = torch.flatten(x, start_dim=1)
-		print(x.size())
 		x = self.fc1(x)
 		x = self.fc2(x)
 		x = self.fc3(x)
