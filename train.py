@@ -68,7 +68,7 @@ def main():
     train_acc = []
     test_acc = []
 
-    for epoch in args.epochs:
+    for epoch in range(args.epochs):
 
         epoch_train_loss = 0
         total_correct = 0
