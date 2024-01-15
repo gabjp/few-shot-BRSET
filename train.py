@@ -4,6 +4,7 @@ import argparse
 from torchvision import transforms, utils
 from torch.utils.data import DataLoader
 from utils import SmallNet, test, save_acc, save_loss
+import os
 
 parser = argparse.ArgumentParser()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
@@ -24,6 +25,9 @@ parser.add_argument("--img-resize", type=str, default="394,508")
 
 def main():
     args = parser.parse_args()
+
+    if not os.path.exists(args.save_path):
+        os.makedirs(args.save_path)
 
     # LOAD DATA
     img_size = tuple( [int(args.img_resize.split(',')[i]) for i in [0,1]] )
