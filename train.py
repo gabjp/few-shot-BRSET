@@ -42,7 +42,7 @@ def main():
     print(f"TEST SET SIZE: {len(test_set)}")
 
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
+    test_dataloader = DataLoader(test_set, batch_size=1, shuffle=False)
 
     # LOAD MODEL
     model = SmallNet()
