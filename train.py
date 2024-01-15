@@ -89,9 +89,7 @@ def main():
             loss.backward()
             opt.step()
 
-            print(out)
             predicted = torch.round(out)
-            print(predicted)
 
             epoch_train_loss += loss.item()
             total_correct += (predicted == labels).sum().item()
