@@ -122,6 +122,8 @@ class VGG16(nn.Module):
 			nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
 			
 			nn.ReLU(),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
 			nn.MaxPool2d(kernel_size=2, stride = 2))
 
 		# Camadas Fully Connected com menos parâmetros que a implementação original:
@@ -144,7 +146,6 @@ class VGG16(nn.Module):
 
 	def forward(self, x):
 		out = self.features(x)
-		print(out.size())
 		out = torch.flatten(out, start_dim=1)
 		out = self.fc(out)
 		out = self.fc1(out)
