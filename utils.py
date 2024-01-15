@@ -81,6 +81,7 @@ def test(testloader, model, criterion, device):
 	num_batch_count = 0
 
 	for i, (image, label) in enumerate(testloader):
+		print('oi')
 		image = image.to(device)
 		label = label.to(device)
 
