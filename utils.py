@@ -80,7 +80,9 @@ def test(testloader, model, criterion, device):
 	total_samples = 0
 	num_batch_count = 0
 
-	for i, (image, label) in enumerate(testloader):
+	print(testloader)
+
+	for (image, label) in testloader:
 		image = image.to(device)
 		label = label.to(device)
 

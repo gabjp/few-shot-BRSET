@@ -41,9 +41,6 @@ def main():
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
     test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
-    for i, (image, label) in enumerate(test_dataloader):
-        print("oi", i)
-
     # LOAD MODEL
     model = SmallNet()
     if args.checkpoint_path != "":
