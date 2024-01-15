@@ -42,7 +42,7 @@ def main():
     print(f"TEST SET SIZE: {len(test_set)}")
 
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_set, batch_size=1, shuffle=False)
+    test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
     # LOAD MODEL
     model = SmallNet()
@@ -89,21 +89,25 @@ def main():
             loss.backward()
             opt.step()
 
+            print(out)
             predicted = torch.round(out)
+            print(predicted)
 
             epoch_train_loss += loss.item()
             total_correct += (predicted == labels).sum().item()
             total_samples += labels.size(0)
             num_batch_count +=1
-        
-        print(f"[{epoch+1}/{args.epochs}] - Training loss: {epoch_train_loss/num_batch_count} - Training accuracy: {total_correct / total_samples * 100}")
-        train_loss.append(epoch_train_loss/num_batch_count)
-        train_acc.append(total_correct / total_samples * 100)
 
-        val_loss, val_acc = test(test_dataloader, model, criterion, device)
-        print(f"[{epoch+1}/{args.epochs}] - Validation loss: {val_loss} - Validation accuracy: {val_acc}", flush=True)
-        test_loss.append(val_loss)
-        test_acc.append(val_acc)
+        with torch.no_grad():
+        
+            print(f"[{epoch+1}/{args.epochs}] - Training loss: {epoch_train_loss/num_batch_count} - Training accuracy: {total_correct / total_samples * 100}")
+            train_loss.append(epoch_train_loss/num_batch_count)
+            train_acc.append(total_correct / total_samples * 100)
+
+            val_loss, val_acc = test(test_dataloader, model, criterion, device)
+            print(f"[{epoch+1}/{args.epochs}] - Validation loss: {val_loss} - Validation accuracy: {val_acc}", flush=True)
+            test_loss.append(val_loss)
+            test_acc.append(val_acc)
 
     # SAVE MODEL 
     torch.save({
