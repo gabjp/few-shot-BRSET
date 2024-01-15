@@ -79,7 +79,7 @@ class VGG16(nn.Module):
 		super().__init__()
 
 		self.features = nn.Sequential(
-			nn.Conv2d(12, 64, kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
 			
 			nn.ReLU(),
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
