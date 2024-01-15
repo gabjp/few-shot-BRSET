@@ -144,7 +144,7 @@ class VGG16(nn.Module):
 
 	def forward(self, x):
 		out = self.features(x)
-		out = torch.reshape(out, (-1, 512))
+		out = torch.reshape(out, (-1, 6144))
 		out = self.fc(out)
 		out = self.fc1(out)
 		out = self.fc2(out)
