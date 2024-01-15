@@ -67,11 +67,11 @@ class SmallNet(nn.Module):
 		x = self.maxpool7(x)
 		
 		x = torch.flatten(x, start_dim=1)
+
+		print(x)
 		x = self.fc1(x)
 		x = self.fc2(x)
 		x = self.fc3(x)
-
-		print(x)
 
 		return torch.flatten(self.m(x))
 	
