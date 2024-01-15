@@ -54,10 +54,11 @@ class FewShotBRSET(Dataset):
             image = self.transform(image)
 
         return image, label
-
-ds = FewShotBRSET(split='40-shot', tasks='hemorrhage', transform=transforms.Resize((394,508)))
-print(ds[0][0].size())
-print(ds[-1][0].size())
-print(len(ds))
+    
+if __name__ == "__main__":
+    ds = FewShotBRSET(split='40-shot', tasks='hemorrhage', transform=transforms.Resize((394,508)))
+    print(ds[0][0].size())
+    print(ds[-1][0].size())
+    print(len(ds))
 
         
