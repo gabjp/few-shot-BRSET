@@ -38,6 +38,9 @@ def main():
     train_set = FewShotBRSET(transform=transform, tasks=tasks, split=args.train_set)
     test_set = FewShotBRSET(transform=transform, tasks=tasks, split='test')
 
+    print(f"TRAIN SET SIZE: {len(train_set)}")
+    print(f"TEST SET SIZE: {len(test_set)}")
+
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
     test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
