@@ -51,7 +51,7 @@ def main():
     print(f"TRAINABLE PARAMETERS: {n_trainable}")
 
     # TRAINING SETUP
-    criterion = torch.nn.BCEWithLogitsLoss()
+    criterion = torch.nn.BCELoss()
 
     if args.optimizer == "adam":
         opt = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
@@ -86,10 +86,10 @@ def main():
             loss.backward()
             opt.step()
 
-            _, predicted = torch.max(out, 1)
+            predicted = torch.round(out)
 
             epoch_train_loss += loss.item()
-            total_correct += (predicted == torch.argmax(labels, dim=1)).sum().item()
+            total_correct += (predicted == labels).sum().item()
             total_samples += labels.size(0)
             num_batch_count +=1
         

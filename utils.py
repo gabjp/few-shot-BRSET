@@ -33,6 +33,8 @@ class SmallNet(nn.Module):
 		self.fc1 = nn.Linear(in_features=512, out_features=256)
 		self.fc2 = nn.Linear(in_features=256, out_features=128)
 		self.fc3 = nn.Linear(in_features=128, out_features=1)
+
+		self.m = nn.Sigmoid
 		
 	def forward(self,x):
 		
@@ -69,7 +71,7 @@ class SmallNet(nn.Module):
 		x = self.fc2(x)
 		x = self.fc3(x)
 
-		return torch.flatten(x)
+		return torch.flatten(self.m(x))
 	
 def test(testloader, model, criterion, device):
 	model.eval()
