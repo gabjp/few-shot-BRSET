@@ -3,7 +3,7 @@ from data.loader import FewShotBRSET
 import argparse
 from torchvision import transforms, utils
 from torch.utils.data import DataLoader
-from utils import SmallNet, test, save_acc, save_loss
+from utils import SmallNet, test, save_acc, save_loss, VGG16
 import os
 
 parser = argparse.ArgumentParser()
@@ -45,7 +45,7 @@ def main():
     test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
     # LOAD MODEL
-    model = SmallNet()
+    model = VGG16()
     if args.checkpoint_path != "":
         checkpoint = torch.load(args.checkpoint_path)
         model.load_state_dict(checkpoint['model_state_dict'], strict=False)

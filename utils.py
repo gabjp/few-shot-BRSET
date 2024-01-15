@@ -75,7 +75,7 @@ class SmallNet(nn.Module):
 		return torch.flatten(self.m(x))
 	
 class VGG16(nn.Module):
-	def __init__(self, num_classes = 3, dropout = 0.3):
+	def __init__(self, dropout = 0.3):
 		super().__init__()
 
 		self.features = nn.Sequential(
