@@ -34,7 +34,7 @@ class SmallNet(nn.Module):
 		self.fc2 = nn.Linear(in_features=256, out_features=128)
 		self.fc3 = nn.Linear(in_features=128, out_features=1)
 
-		self.m = nn.Sigmoid
+		self.m = nn.Sigmoid()
 		
 	def forward(self,x):
 		
