@@ -69,7 +69,7 @@ class SmallNet(nn.Module):
 		x = self.fc2(x)
 		x = self.fc3(x)
 
-		return x
+		return torch.flatten(x)
 	
 def test(testloader, model, criterion, device):
 	model.eval()
