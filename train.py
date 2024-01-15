@@ -41,6 +41,9 @@ def main():
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
     test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
+    for i, (image, label) in enumerate(test_dataloader):
+        print("oi", i)
+
     # LOAD MODEL
     model = SmallNet()
     if args.checkpoint_path != "":
@@ -97,7 +100,7 @@ def main():
         train_loss.append(epoch_train_loss/num_batch_count)
         train_acc.append(total_correct / total_samples * 100)
 
-        val_loss, val_acc = test(test_dataloader,model, criterion, device)
+        val_loss, val_acc = test(test_dataloader, model, criterion, device)
         print(f"[{epoch+1}/{args.epochs}] - Validation loss: {val_loss} - Validation accuracy: {val_acc}")
         test_loss.append(val_loss)
         test_acc.append(val_acc)

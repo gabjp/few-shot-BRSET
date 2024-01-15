@@ -81,17 +81,16 @@ def test(testloader, model, criterion, device):
 	num_batch_count = 0
 
 	for i, (image, label) in enumerate(testloader):
-		print('oi')
 		image = image.to(device)
 		label = label.to(device)
 
 		out = model(image)
 		loss = criterion(out, label)
 
-		_, predicted = torch.max(out, 1)
+		predicted = torch.round(out)
 
 		epoch_loss += loss.item()
-		total_correct += ((predicted == torch.argmax(label, dim=1))).sum().item()
+		total_correct += (predicted == label).sum().item()
 		total_samples += label.size(0)
 		num_batch_count +=1
 
