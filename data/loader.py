@@ -46,7 +46,7 @@ class FewShotBRSET(Dataset):
             idx = idx.tolist()
 
         img_name = os.path.join(self.img_dir,
-                                self.csv.iloc[idx]['image_id'])
+                                f"{self.csv.iloc[idx]['image_id']}.jpg")
         image = read_image(img_name)
         label = int (not (1 in set(self.csv.iloc[idx][CLASS_COLUMNS])))
 
