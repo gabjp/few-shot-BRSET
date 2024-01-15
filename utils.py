@@ -35,31 +35,31 @@ class SmallNet(nn.Module):
 		self.fc3 = nn.Linear(in_features=256, out_features=2)
 		
 	def forward(self,x):
-
+		print(x.size())
 		x = self.conv1(x)
 		x = self.relu(x)
 		x = self.maxpool1(x)
-		
+		print(x.size())
 		x = self.conv2(x)
 		x = self.relu(x)
 		x = self.maxpool2(x)
-
+		print(x.size())
 		x = self.conv3(x)
 		x = self.relu(x)
 		x = self.maxpool3(x)
-
+		print(x.size())
 		x = self.conv4(x)
 		x = self.relu(x)
 		x = self.maxpool4(x)
-
+		print(x.size())
 		x = self.conv5(x)
 		x = self.relu(x)
 		x = self.maxpool5(x)
-
+		print(x.size())
 		x = self.conv6(x)
 		x = self.relu(x)
 		x = self.maxpool6(x)
-
+		print(x.size())
 		x = self.conv7(x)
 		x = self.relu(x)
 		x = self.maxpool7(x)
