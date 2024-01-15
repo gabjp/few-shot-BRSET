@@ -32,7 +32,7 @@ class SmallNet(nn.Module):
 		
 		self.fc1 = nn.Linear(in_features=512, out_features=256)
 		self.fc2 = nn.Linear(in_features=256, out_features=128)
-		self.fc3 = nn.Linear(in_features=128, out_features=2)
+		self.fc3 = nn.Linear(in_features=128, out_features=1)
 		
 	def forward(self,x):
 		
