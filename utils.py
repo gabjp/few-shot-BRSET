@@ -19,7 +19,7 @@ class SmallNet(nn.Module):
 		self.maxpool3 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
 		
 		self.conv4 = nn.Conv2d(in_channels=128, out_channels=128,kernel_size=(3, 3))
-		self.maxpool4 = nn.MaxPo4l2d(kernel_size=(2, 2), stride=(2, 2))
+		self.maxpool4 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
 		
 		self.conv5 = nn.Conv2d(in_channels=128, out_channels=256,kernel_size=(3, 3))
 		self.maxpool5 = nn.MaxPool2d(kernel_size=(2, 2), stride=(2, 2))
