@@ -37,6 +37,8 @@ class SmallNet(nn.Module):
 		self.m = nn.Sigmoid()
 		
 	def forward(self,x):
+
+		print(x[0])
 		
 		x = self.conv1(x)
 		x = self.relu(x)
@@ -68,7 +70,6 @@ class SmallNet(nn.Module):
 		
 		x = torch.flatten(x, start_dim=1)
 
-		print(x)
 		x = self.fc1(x)
 		x = self.fc2(x)
 		x = self.fc3(x)
