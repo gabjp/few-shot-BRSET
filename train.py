@@ -56,7 +56,7 @@ def main():
     if args.optimizer == "adam":
         opt = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
     elif args.optimizer == "sgd":
-        opt = torch.optim.SGD(model.parameters, lr=args.learning_rate)
+        opt = torch.optim.SGD(model.parameters(), lr=args.learning_rate)
     
     model.train()
     model.to(device)
