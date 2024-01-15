@@ -39,7 +39,7 @@ def main():
     test_set = FewShotBRSET(transform=transform, tasks=tasks, split='test')
 
     train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
-    test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=True)
+    test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
     # LOAD MODEL
     model = SmallNet()
