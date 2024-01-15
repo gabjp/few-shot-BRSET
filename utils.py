@@ -87,7 +87,7 @@ def test(testloader, model, criterion, device):
 		label = label.to(device)
 
 		out = model(image)
-		loss = criterion(out, label)
+		loss = criterion(out, label.float())
 
 		predicted = torch.round(out)
 
