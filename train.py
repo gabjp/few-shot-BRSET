@@ -86,6 +86,9 @@ def main():
             out = model(images)
 
             loss = criterion(out, labels.float())
+
+            print(labels.float())
+
             loss.backward()
             opt.step()
 
