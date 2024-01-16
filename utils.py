@@ -4,7 +4,7 @@ import matplotlib.pyplot as plt
 
 class DumbNet(nn.Module):
 	def __init__(self):
-		
+		super(DumbNet, self).__init__()
 		self.fc = nn.Sequential(
 			nn.Linear(3 * 1024, 1024),
 			nn.LeakyReLU())
