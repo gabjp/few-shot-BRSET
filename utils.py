@@ -26,7 +26,7 @@ class DumbNet(nn.Module):
 			nn.Conv2d(64, 12, kernel_size=3, stride=1, padding=1),			
 			nn.LeakyReLU())
 
-		self.fc1= nn.Sequential(
+		self.fc= nn.Sequential(
 			nn.Linear(3 * 1024, 1024),
 			nn.LeakyReLU())
 
@@ -46,6 +46,7 @@ class DumbNet(nn.Module):
 	def forward(self,out):
 		out = self.features(out)
 		out = torch.flatten(out, start_dim=1)
+		out = self.fc(out)
 		out = self.fc1(out)
 		out = self.fc2(out)
 		out = self.fc3(out)
