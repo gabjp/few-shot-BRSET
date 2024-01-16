@@ -24,7 +24,7 @@ class DumbNet(nn.Module):
 	
 	def forward(self,x):
 
-		out = torch.flatten(out, start_dim=1)
+		out = torch.flatten(x, start_dim=1)
 		out = self.fc(out)
 		out = self.fc1(out)
 		out = self.fc2(out)
