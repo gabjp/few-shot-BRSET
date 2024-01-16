@@ -122,15 +122,13 @@ class VGG16(nn.Module):
 			nn.Conv2d(512, 512, kernel_size=3, stride=1, padding=1),
 			
 			nn.ReLU(),
-			nn.MaxPool2d(kernel_size=2, stride = 2),
-			nn.MaxPool2d(kernel_size=2, stride = 2),
 			nn.MaxPool2d(kernel_size=2, stride = 2))
 
 		# Camadas Fully Connected com menos parâmetros que a implementação original:
 
 		self.fc = nn.Sequential(
 			nn.Dropout(dropout),
-			nn.Linear(6144, 1024),
+			nn.Linear(2048, 1024),
 			nn.ReLU())
 
 		self.fc1 = nn.Sequential(
