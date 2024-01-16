@@ -2,6 +2,36 @@ from torch import nn
 import torch
 import matplotlib.pyplot as plt
 
+class DumbNet(nn.Module):
+	def __init__(self):
+		
+		self.fc = nn.Sequential(
+			nn.Linear(3 * 1024, 1024),
+			nn.LeakyReLU())
+
+		self.fc1= nn.Sequential(
+			nn.Linear(1024, 512),
+			nn.LeakyReLU())
+
+		self.fc2 = nn.Sequential(
+			nn.Linear(512, 256),
+			nn.LeakyReLU())
+
+		self.fc3 = nn.Sequential(
+			nn.Linear(256, 1))
+		
+		self.m = nn.Sigmoid()
+	
+	def forward(self,x):
+
+		out = torch.flatten(out, start_dim=1)
+		out = self.fc(out)
+		out = self.fc1(out)
+		out = self.fc2(out)
+		out = self.fc3(out)
+		return torch.flatten(self.m(out))
+
+
 class SmallNet(nn.Module):
 	def __init__(self):
 		super(SmallNet, self).__init__()
