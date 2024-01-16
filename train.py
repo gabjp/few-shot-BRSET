@@ -87,8 +87,6 @@ def main():
 
             loss = criterion(out, labels.float())
 
-            print(labels.float())
-
             loss.backward()
             opt.step()
 
