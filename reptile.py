@@ -81,7 +81,7 @@ def main():
     train_info = []
 
     for o_step in range(args.outer_steps):
-        task_idx = random.randint(0,len(tasks))
+        task_idx = random.randint(0,len(tasks) - 1)
         weights_before = deepcopy(model.state_dict())
         opt = opt_f(model.parameters(), lr=args.inner_learning_rate)
 
