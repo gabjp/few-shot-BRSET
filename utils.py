@@ -6,39 +6,39 @@ class DumbNet(nn.Module):
 	def __init__(self):
 		super(DumbNet, self).__init__()
 
-		# self.features = nn.Sequential(
-		# 	nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
-		# 	nn.LeakyReLU(),
-		# 	nn.MaxPool2d(kernel_size=4, stride = 4),
+		self.features = nn.Sequential(
+			nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
 
-		# 	nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-		# 	nn.LeakyReLU(),
-		# 	nn.MaxPool2d(kernel_size=4, stride = 4),
+			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
 
-		# 	nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-		# 	nn.LeakyReLU(),
-		# 	nn.MaxPool2d(kernel_size=4, stride = 4),
+			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
 
-		# 	nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
-		# 	nn.LeakyReLU(),
-		# 	nn.MaxPool2d(kernel_size=4, stride = 4),
-		# 	)
+			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
+			)
 
 		self.fc1= nn.Sequential(
-			nn.Linear(192, 128),
+			nn.Linear(1024, 512),
 			nn.LeakyReLU())
 
 		self.fc2 = nn.Sequential(
-			nn.Linear(128, 64),
+			nn.Linear(512, 256),
 			nn.LeakyReLU())
 
 		self.fc3 = nn.Sequential(
-			nn.Linear(64, 1))
+			nn.Linear(256, 1))
 		
 		self.m = nn.Sigmoid()
 	
 	def forward(self,out):
-		#out = self.features(out)
+		out = self.features(out)
 		out = torch.flatten(out, start_dim=1)
 		out = self.fc1(out)
 		out = self.fc2(out)
