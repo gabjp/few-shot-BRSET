@@ -25,15 +25,15 @@ class DumbNet(nn.Module):
 			)
 
 		self.fc1= nn.Sequential(
-			nn.Linear(256, 256),
-			nn.LeakyReLU())
-
-		self.fc2 = nn.Sequential(
 			nn.Linear(256, 128),
 			nn.LeakyReLU())
 
+		self.fc2 = nn.Sequential(
+			nn.Linear(128, 64),
+			nn.LeakyReLU())
+
 		self.fc3 = nn.Sequential(
-			nn.Linear(128, 1))
+			nn.Linear(64, 1))
 		
 		self.m = nn.Sigmoid()
 	
