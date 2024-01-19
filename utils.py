@@ -13,7 +13,7 @@ class DumbNet(nn.Module):
 
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=2, stride = 2),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
 
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
@@ -25,15 +25,15 @@ class DumbNet(nn.Module):
 			)
 
 		self.fc1= nn.Sequential(
-			nn.Linear(1024, 512),
+			nn.Linear(256, 256),
 			nn.LeakyReLU())
 
 		self.fc2 = nn.Sequential(
-			nn.Linear(512, 256),
+			nn.Linear(256, 128),
 			nn.LeakyReLU())
 
 		self.fc3 = nn.Sequential(
-			nn.Linear(256, 1))
+			nn.Linear(128, 1))
 		
 		self.m = nn.Sigmoid()
 	
