@@ -25,7 +25,7 @@ class DumbNet(nn.Module):
 		# 	)
 
 		self.fc1= nn.Sequential(
-			nn.Linear(256, 128),
+			nn.Linear(192, 128),
 			nn.LeakyReLU())
 
 		self.fc2 = nn.Sequential(
