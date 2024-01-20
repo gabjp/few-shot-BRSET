@@ -9,11 +9,11 @@ class DumbNet(nn.Module):
 		self.features = nn.Sequential(
 			nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=2, stride = 2),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
 
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=2, stride = 2),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
 
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
@@ -24,24 +24,24 @@ class DumbNet(nn.Module):
 			nn.MaxPool2d(kernel_size=4, stride = 4),
 			)
 
-		self.fc1= nn.Sequential(
-			nn.Linear(1024, 512),
-			nn.LeakyReLU())
+		# self.fc1= nn.Sequential(
+		# 	nn.Linear(1024, 512),
+		# 	nn.LeakyReLU())
 
-		self.fc2 = nn.Sequential(
-			nn.Linear(512, 256),
-			nn.LeakyReLU())
+		# self.fc2 = nn.Sequential(
+		# 	nn.Linear(512, 256),
+		# 	nn.LeakyReLU())
 
 		self.fc3 = nn.Sequential(
-			nn.Linear(256, 1))
+			nn.Linear(64, 1))
 		
 		self.m = nn.Sigmoid()
 	
 	def forward(self,out):
 		out = self.features(out)
 		out = torch.flatten(out, start_dim=1)
-		out = self.fc1(out)
-		out = self.fc2(out)
+		#out = self.fc1(out)
+		#out = self.fc2(out)
 		out = self.fc3(out)
 		return torch.flatten(self.m(out))
 
