@@ -7,19 +7,19 @@ class DumbNet(nn.Module):
 		super(DumbNet, self).__init__()
 
 		self.features = nn.Sequential(
-			nn.Conv2d(3, 64, kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(3, 32, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
 
-			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
 
-			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
 
-			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
+			nn.Conv2d(32, 32, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
 			)
@@ -33,7 +33,7 @@ class DumbNet(nn.Module):
 		# 	nn.LeakyReLU())
 
 		self.fc3 = nn.Sequential(
-			nn.Linear(64, 1))
+			nn.Linear(32, 1))
 		
 		self.m = nn.Sigmoid()
 	
