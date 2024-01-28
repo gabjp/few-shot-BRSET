@@ -178,7 +178,7 @@ def main():
                     test_loss, test_acc = test(test_loader, model, criterion, device)
                     val_info.append((task, train_loss, train_acc, test_loss, test_acc))
 
-                    print(print("VALIDATION TASK"))
+                    print("VALIDATION TASK")
                     print(f"[{o_step+1}/{args.outer_steps}] Current task: {task}")
                     print(f"[{o_step+1}/{args.outer_steps}] Train - Loss: {train_loss} Acc: {train_acc}")
                     print(f"[{o_step+1}/{args.outer_steps}] Validation - Loss: {test_loss} Acc: {test_acc}", flush=True)
