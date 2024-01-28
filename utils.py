@@ -10,19 +10,11 @@ class DumbNet(nn.Module):
 
 			nn.Conv2d(3, 16, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=4, stride = 4),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
 
 			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=4, stride = 4),
-
-			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
-			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=4, stride = 4),
-
-			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
-			nn.LeakyReLU(),
-			nn.MaxPool2d(kernel_size=4, stride = 4),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
 
 			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
@@ -31,6 +23,14 @@ class DumbNet(nn.Module):
 			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=2, stride = 2),
+
+			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=2, stride = 2),
+
+			nn.Conv2d(16, 16, kernel_size=3, stride=1, padding=1),
+			nn.LeakyReLU(),
+			nn.MaxPool2d(kernel_size=4, stride = 4),
 			)
 
 		# self.fc1= nn.Sequential(

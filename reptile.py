@@ -24,15 +24,43 @@ parser.add_argument("--outer-learning-rate", type=float, default=0.001)
 parser.add_argument("--outer-steps", type=int, default=20)
 
 ###### DATA AND SAVE SETTINGS ######
-parser.add_argument("--tasks", type=str, default="")
+parser.add_argument("--train-tasks", type=str, default="")
+parser.add_argument("--val-tasks", type=str, default="")
 parser.add_argument("--train-set", type=str, default="")
 parser.add_argument("--save-path", type=str, default="")
 parser.add_argument("--img-resize", type=str, default="256,256")
 
+args = parser.parse_args()
+print(args)
+
+def train_on_task(model, opt, criterion, train_loader):
+    for i_step in range(args.inner_steps):
+
+        epoch_train_loss = 0
+        total_correct = 0
+        total_samples = 0
+        num_batch_count = 0
+
+        for i, (images, labels) in enumerate(train_loader):
+            images = images.to(device)
+            labels = labels.to(device)
+
+            opt.zero_grad()
+            out = model(images)
+
+            loss = criterion(out, labels.float())
+
+            loss.backward()
+            opt.step()
+
+            predicted = torch.round(out)
+            epoch_train_loss += loss.item()
+            total_correct += (predicted == labels).sum().item()
+            total_samples += labels.size(0)
+            num_batch_count +=1
+    return epoch_train_loss, (total_correct/total_samples)*100
 
 def main():
-    args = parser.parse_args()
-    print(args)
 
     if not os.path.exists(args.save_path):
         os.makedirs(args.save_path)
@@ -40,12 +68,15 @@ def main():
     # LOAD DATA
     img_size = tuple( [int(args.img_resize.split(',')[i]) for i in [0,1]] )
     transform = transforms.Resize(img_size, antialias=False)
-    tasks = args.tasks.split(',')
+    train_tasks = args.train_tasks.split(',')
+    val_tasks = args.val_tasks.split(',')
 
-    train_loaders = []
-    test_loaders = []
+    train_loaders_t = []
+    test_loaders_t = []
 
-    for task in tasks:
+    print("TRAIN TASKS")
+
+    for task in train_tasks:
 
         train_set = FewShotBRSET(transform=transform, tasks=task, split=args.train_set)
         test_set = FewShotBRSET(transform=transform, tasks=task, split='test')
@@ -57,8 +88,29 @@ def main():
         train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
         test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
 
-        train_loaders.append(train_dataloader)
-        test_loaders.append(test_dataloader)
+        train_loaders_t.append(train_dataloader)
+        test_loaders_t.append(test_dataloader)
+    
+    print()
+    print("VAL TASKS")
+
+    train_loaders_v = []
+    test_loaders_v = []
+
+    for task in val_tasks:
+
+        train_set = FewShotBRSET(transform=transform, tasks=task, split=args.train_set)
+        test_set = FewShotBRSET(transform=transform, tasks=task, split='test')
+
+        print(task)
+        print(f"TRAIN SET SIZE: {len(train_set)}")
+        print(f"TEST SET SIZE: {len(test_set)}")
+
+        train_dataloader = DataLoader(train_set, batch_size=args.batch_size, shuffle=True)
+        test_dataloader = DataLoader(test_set, batch_size=args.batch_size, shuffle=False)
+
+        train_loaders_v.append(train_dataloader)
+        test_loaders_v.append(test_dataloader)
         
     # LOAD MODEL
     model = DumbNet()
@@ -79,47 +131,26 @@ def main():
     # TRAIN
 
     train_info = []
+    val_info = []
 
     for o_step in range(args.outer_steps):
-        task_idx = random.randint(0,len(tasks) - 1)
+        task_idx = random.randint(0,len(train_tasks) - 1)
         weights_before = deepcopy(model.state_dict())
         opt = opt_f(model.parameters(), lr=args.inner_learning_rate)
 
-        train_loader = train_loaders[task_idx]
-        test_loader = test_loaders[task_idx]
-        task = tasks[task_idx]
+        train_loader = train_loaders_t[task_idx]
+        test_loader = test_loaders_t[task_idx]
+        task = train_tasks[task_idx]
 
-        for i_step in range(args.inner_steps):
-
-            epoch_train_loss = 0
-            total_correct = 0
-            total_samples = 0
-            num_batch_count = 0
-
-            for i, (images, labels) in enumerate(train_loader):
-                images = images.to(device)
-                labels = labels.to(device)
-
-                opt.zero_grad()
-                out = model(images)
-
-                loss = criterion(out, labels.float())
-
-                loss.backward()
-                opt.step()
-
-                predicted = torch.round(out)
-                epoch_train_loss += loss.item()
-                total_correct += (predicted == labels).sum().item()
-                total_samples += labels.size(0)
-                num_batch_count +=1
+        train_loss, train_acc = train_on_task(model, opt, criterion, train_loader)
 
         with torch.no_grad():
             test_loss, test_acc = test(test_loader, model, criterion, device)
-            train_info.append((task, epoch_train_loss, total_correct / total_samples, test_loss, test_acc))
+            train_info.append((task, train_loss, train_acc, test_loss, test_acc))
 
+            print("TRAINING TASK")
             print(f"[{o_step+1}/{args.outer_steps}] Current task: {task}")
-            print(f"[{o_step+1}/{args.outer_steps}] Train - Loss: {epoch_train_loss} Acc: {total_correct / total_samples}")
+            print(f"[{o_step+1}/{args.outer_steps}] Train - Loss: {train_loss} Acc: {train_acc}")
             print(f"[{o_step+1}/{args.outer_steps}] Validation - Loss: {test_loss} Acc: {test_acc}", flush=True)
         
         weights_after = model.state_dict()
@@ -128,6 +159,33 @@ def main():
         model.load_state_dict({name : 
             weights_before[name] + (weights_after[name] - weights_before[name]) * outerstepsize 
             for name in weights_before})
+        
+        if o_step % 10 == 0:
+            # IF A MODEL WITH BATCH NORM IS TRAINED WITH THIS CODE THE FOLLOWING
+            # PART WILL CAUSE INFORMATION LEAKAGE
+
+            # CHECKPOINT
+            checkpoint = deepcopy(model.state_dict())
+            for i in range(len(val_tasks)):
+                opt = opt_f(model.parameters(), lr=args.inner_learning_rate) # Reset optimizer
+                train_loader = train_loaders_v[i]
+                test_loader = test_loaders_v[i]
+                task = val_tasks[i]
+
+                train_loss, train_acc = train_on_task(model, opt, criterion, train_loader)
+
+                with torch.no_grad():
+                    test_loss, test_acc = test(test_loader, model, criterion, device)
+                    val_info.append((task, train_loss, train_acc, test_loss, test_acc))
+
+                    print(print("VALIDATION TASK"))
+                    print(f"[{o_step+1}/{args.outer_steps}] Current task: {task}")
+                    print(f"[{o_step+1}/{args.outer_steps}] Train - Loss: {train_loss} Acc: {train_acc}")
+                    print(f"[{o_step+1}/{args.outer_steps}] Validation - Loss: {test_loss} Acc: {test_acc}", flush=True)
+
+            # RESTORE MODEL
+            model.load_state_dict(checkpoint)
+            
             
     # SAVE MODEL AND FIGS
         
@@ -135,10 +193,12 @@ def main():
                 'model_state_dict': model.state_dict()
                 }, args.save_path + "/checkpoint.pth")
     
-    train_loss_dict = {name:[] for name in tasks}
-    train_acc_dict = {name:[] for name in tasks}
-    test_loss_dict = {name:[] for name in tasks}
-    test_acc_dict = {name:[] for name in tasks}
+    # TRAIN TASKS
+    
+    train_loss_dict = {name:[] for name in train_tasks}
+    train_acc_dict = {name:[] for name in train_tasks}
+    test_loss_dict = {name:[] for name in train_tasks}
+    test_acc_dict = {name:[] for name in train_tasks}
 
     for i,(task, train_loss, train_acc, test_loss, test_acc) in enumerate(train_info):
         train_loss_dict[task].append((train_loss,i))
@@ -146,10 +206,28 @@ def main():
         test_loss_dict[task].append((test_loss,i))
         test_acc_dict[task].append((test_acc,i))
 
-    save_multi_plot(args.save_path + "/train_loss.png", train_loss_dict, "Loss", "Train Loss")
-    save_multi_plot(args.save_path + "/test_loss.png", test_loss_dict, "Loss", "Test Loss")
-    save_multi_plot(args.save_path + "/train_acc.png", train_acc_dict, "Accuracy", "Train Accuracy")
-    save_multi_plot(args.save_path + "/test_acc.png", test_acc_dict, "Accuracy", "Test accuracy")
+    save_multi_plot(args.save_path + "/train_loss_train_task.png", train_loss_dict, "Loss", "Train Loss")
+    save_multi_plot(args.save_path + "/test_loss_train_task.png", test_loss_dict, "Loss", "Test Loss")
+    save_multi_plot(args.save_path + "/train_acc_train_task.png", train_acc_dict, "Accuracy", "Train Accuracy")
+    save_multi_plot(args.save_path + "/test_acc_train_task.png", test_acc_dict, "Accuracy", "Test accuracy")
+
+    # VALIDATION TASKS
+
+    train_loss_dict = {name:[] for name in val_tasks}
+    train_acc_dict = {name:[] for name in val_tasks}
+    test_loss_dict = {name:[] for name in val_tasks}
+    test_acc_dict = {name:[] for name in val_tasks}
+
+    for i,(task, train_loss, train_acc, test_loss, test_acc) in enumerate(val_info):
+        train_loss_dict[task].append((train_loss,i))
+        train_acc_dict[task].append((train_acc,i))
+        test_loss_dict[task].append((test_loss,i))
+        test_acc_dict[task].append((test_acc,i))
+
+    save_multi_plot(args.save_path + "/train_loss_val_task.png", train_loss_dict, "Loss", "Train Loss")
+    save_multi_plot(args.save_path + "/test_loss_val_task.png", test_loss_dict, "Loss", "Test Loss")
+    save_multi_plot(args.save_path + "/train_acc_val_task.png", train_acc_dict, "Accuracy", "Train Accuracy")
+    save_multi_plot(args.save_path + "/test_acc_val_task.png", test_acc_dict, "Accuracy", "Test accuracy")
 
     return
 
