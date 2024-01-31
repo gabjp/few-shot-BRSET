@@ -191,6 +191,7 @@ def main():
             val_acc = val_acc / len(val_tasks)
             print(f"Validation accuracy mean {val_acc}")
             if val_acc >= best_val_acc:
+                best_val_acc = val_acc
                 torch.save({
                 'model_state_dict': model.state_dict()
                 }, args.save_path + "/best_checkpoint.pth")
@@ -227,7 +228,7 @@ def main():
     test_loss_dict = {name:[] for name in val_tasks}
     test_acc_dict = {name:[] for name in val_tasks}
 
-    for i in range(len(val_info)/len(val_tasks)):
+    for i in range(int(len(val_info)/len(val_tasks))):
         for j in range(len(val_tasks)):
             task, train_loss, train_acc, test_loss, test_acc = val_info[i* len(val_tasks) + j]
             train_loss_dict[task].append((train_loss,i))
