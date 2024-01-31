@@ -133,6 +133,8 @@ def main():
     train_info = []
     val_info = []
 
+    best_val_acc = 0
+
     for o_step in range(args.outer_steps):
         task_idx = random.randint(0,len(train_tasks) - 1)
         weights_before = deepcopy(model.state_dict())
@@ -161,10 +163,9 @@ def main():
             for name in weights_before})
         
         if o_step % 10 == 0:
-            # IF A MODEL WITH BATCH NORM IS TRAINED WITH THIS CODE THE FOLLOWING
-            # PART WILL CAUSE INFORMATION LEAKAGE
 
             # CHECKPOINT
+            val_acc = 0
             checkpoint = deepcopy(model.state_dict())
             for i in range(len(val_tasks)):
                 opt = opt_f(model.parameters(), lr=args.inner_learning_rate) # Reset optimizer
@@ -182,16 +183,24 @@ def main():
                     print(f"[{o_step+1}/{args.outer_steps}] Current task: {task}")
                     print(f"[{o_step+1}/{args.outer_steps}] Train - Loss: {train_loss} Acc: {train_acc}")
                     print(f"[{o_step+1}/{args.outer_steps}] Validation - Loss: {test_loss} Acc: {test_acc}", flush=True)
+                    val_acc += test_acc
 
             # RESTORE MODEL
             model.load_state_dict(checkpoint)
+
+            val_acc = val_acc / len(val_tasks)
+            print(f"Validation accuracy mean {val_acc}")
+            if val_acc >= best_val_acc:
+                torch.save({
+                'model_state_dict': model.state_dict()
+                }, args.save_path + "/best_checkpoint.pth")
             
             
     # SAVE MODEL AND FIGS
         
     torch.save({
                 'model_state_dict': model.state_dict()
-                }, args.save_path + "/checkpoint.pth")
+                }, args.save_path + "/last_checkpoint.pth")
     
     # TRAIN TASKS
     
