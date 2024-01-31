@@ -195,7 +195,7 @@ def main():
                 'model_state_dict': model.state_dict()
                 }, args.save_path + "/best_checkpoint.pth")
             
-            
+    print(f"BEST VALIDATION ACC: {best_val_acc}")
     # SAVE MODEL AND FIGS
         
     torch.save({
@@ -227,11 +227,19 @@ def main():
     test_loss_dict = {name:[] for name in val_tasks}
     test_acc_dict = {name:[] for name in val_tasks}
 
-    for i,(task, train_loss, train_acc, test_loss, test_acc) in enumerate(val_info):
-        train_loss_dict[task].append((train_loss,i))
-        train_acc_dict[task].append((train_acc,i))
-        test_loss_dict[task].append((test_loss,i))
-        test_acc_dict[task].append((test_acc,i))
+    for i in range(len(val_info)/len(val_tasks)):
+        for j in range(len(val_tasks)):
+            task, train_loss, train_acc, test_loss, test_acc = val_info[i* len(val_tasks) + j]
+            train_loss_dict[task].append((train_loss,i))
+            train_acc_dict[task].append((train_acc,i))
+            test_loss_dict[task].append((test_loss,i))
+            test_acc_dict[task].append((test_acc,i))
+
+    #for i,(task, train_loss, train_acc, test_loss, test_acc) in enumerate(val_info):
+    #    train_loss_dict[task].append((train_loss,i))
+    #    train_acc_dict[task].append((train_acc,i))
+    #    test_loss_dict[task].append((test_loss,i))
+    #    test_acc_dict[task].append((test_acc,i))
 
     save_multi_plot(args.save_path + "/train_loss_val_task.png", train_loss_dict, "Loss", "Train Loss")
     save_multi_plot(args.save_path + "/test_loss_val_task.png", test_loss_dict, "Loss", "Test Loss")
