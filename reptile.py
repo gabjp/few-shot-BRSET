@@ -74,8 +74,8 @@ def main():
     val_tasks = args.val_tasks.split(',')
 
     train_transform = transform if not args.transform else transforms.Compose([transform,
-                                                                                transform.RandomHorizontalFlip(p=0.5),
-                                                                                transform.RandomVerticalFlip(p=0.5)])
+                                                                                transforms.RandomHorizontalFlip(p=0.5),
+                                                                                transforms.RandomVerticalFlip(p=0.5)])
 
     train_loaders_t = []
     test_loaders_t = []
