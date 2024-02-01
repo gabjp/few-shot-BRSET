@@ -19,6 +19,7 @@ parser.add_argument("--inner-learning-rate", type=float, default=0.001)
 parser.add_argument("--inner-steps", type=int, default=20)
 parser.add_argument("--batch-size", type=int, default=80)
 parser.add_argument("--l2", type=float, default=0)
+parser.add_argument('--transform', action='store_true')
 
 ###### OUTER LOOP SETTINGS ######
 parser.add_argument("--outer-learning-rate", type=float, default=0.001)
@@ -72,6 +73,10 @@ def main():
     train_tasks = args.train_tasks.split(',')
     val_tasks = args.val_tasks.split(',')
 
+    train_transform = transform if not args.transform else transforms.Compose([transform,
+                                                                                transform.RandomHorizontalFlip(p=0.5),
+                                                                                transform.RandomVerticalFlip(p=0.5)])
+
     train_loaders_t = []
     test_loaders_t = []
 
@@ -79,7 +84,7 @@ def main():
 
     for task in train_tasks:
 
-        train_set = FewShotBRSET(transform=transform, tasks=task, split=args.train_set)
+        train_set = FewShotBRSET(transform=train_transform, tasks=task, split=args.train_set)
         test_set = FewShotBRSET(transform=transform, tasks=task, split='test')
 
         print(task)
@@ -100,7 +105,7 @@ def main():
 
     for task in val_tasks:
 
-        train_set = FewShotBRSET(transform=transform, tasks=task, split=args.train_set)
+        train_set = FewShotBRSET(transform=train_transform, tasks=task, split=args.train_set)
         test_set = FewShotBRSET(transform=transform, tasks=task, split='test')
 
         print(task)
