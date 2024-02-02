@@ -18,7 +18,8 @@ parser.add_argument("--inner-optimizer", type=str, default="sgd")
 parser.add_argument("--inner-learning-rate", type=float, default=0.001)
 parser.add_argument("--inner-steps", type=int, default=20)
 parser.add_argument("--batch-size", type=int, default=80)
-parser.add_argument("--l2", type=float, default=0)
+parser.add_argument("--train-l2", type=float, default=0)
+parser.add_argument("--eval-l2", type=float, default=0)
 parser.add_argument('--transform', action='store_true')
 
 ###### OUTER LOOP SETTINGS ######
@@ -144,7 +145,7 @@ def main():
     for o_step in range(args.outer_steps):
         task_idx = random.randint(0,len(train_tasks) - 1)
         weights_before = deepcopy(model.state_dict())
-        opt = opt_f(model.parameters(), lr=args.inner_learning_rate, weight_decay=args.l2)
+        opt = opt_f(model.parameters(), lr=args.inner_learning_rate, weight_decay=args.train_l2)
 
         train_loader = train_loaders_t[task_idx]
         test_loader = test_loaders_t[task_idx]
@@ -174,7 +175,7 @@ def main():
             val_acc = 0
             checkpoint = deepcopy(model.state_dict())
             for i in range(len(val_tasks)):
-                opt = opt_f(model.parameters(), lr=args.inner_learning_rate, weight_decay=args.l2) # Reset optimizer
+                opt = opt_f(model.parameters(), lr=args.inner_learning_rate, weight_decay=args.eval_l2) # Reset optimizer
                 train_loader = train_loaders_v[i]
                 test_loader = test_loaders_v[i]
                 task = val_tasks[i]
