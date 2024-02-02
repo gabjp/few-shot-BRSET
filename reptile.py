@@ -174,7 +174,7 @@ def main():
             val_acc = 0
             checkpoint = deepcopy(model.state_dict())
             for i in range(len(val_tasks)):
-                opt = opt_f(model.parameters(), lr=args.inner_learning_rate) # Reset optimizer
+                opt = opt_f(model.parameters(), lr=args.inner_learning_rate, weight_decay=args.l2) # Reset optimizer
                 train_loader = train_loaders_v[i]
                 test_loader = test_loaders_v[i]
                 task = val_tasks[i]

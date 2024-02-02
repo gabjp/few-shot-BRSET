@@ -17,6 +17,7 @@ parser.add_argument("--batch-size", type=int, default=80)
 parser.add_argument("--checkpoint-path", type=str, default="")
 parser.add_argument('--transform', action='store_true')
 parser.add_argument('--schedule', action='store_true')
+parser.add_argument("--l2", type=float, default=0)
 
 ###### DATA AND SAVE SETTINGS ######
 parser.add_argument("--tasks", type=str, default="")
@@ -63,9 +64,9 @@ def main():
     criterion = torch.nn.BCELoss()
 
     if args.optimizer == "adam":
-        opt = torch.optim.Adam(model.parameters(), lr=args.learning_rate)
+        opt = torch.optim.Adam(model.parameters(), lr=args.learning_rate, weight_decay=args.l2)
     elif args.optimizer == "sgd":
-        opt = torch.optim.SGD(model.parameters(), lr=args.learning_rate)
+        opt = torch.optim.SGD(model.parameters(), lr=args.learning_rate, weight_decay=args.l2)
     
     model.train()
     model.to(device)
