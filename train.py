@@ -15,6 +15,8 @@ parser.add_argument("--learning-rate", type=float, default=0.001)
 parser.add_argument("--epochs", type=int, default=20)
 parser.add_argument("--batch-size", type=int, default=80)
 parser.add_argument("--checkpoint-path", type=str, default="")
+parser.add_argument('--transform', action='store_true')
+parser.add_argument('--schedule', action='store_true')
 
 ###### DATA AND SAVE SETTINGS ######
 parser.add_argument("--tasks", type=str, default="")
@@ -35,7 +37,11 @@ def main():
     transform = transforms.Resize(img_size, antialias=False)
     tasks = args.tasks.split(',')
 
-    train_set = FewShotBRSET(transform=transform, tasks=tasks, split=args.train_set)
+    train_transform = transform if not args.transform else transforms.Compose([transform,
+                                                                                transforms.RandomHorizontalFlip(p=0.5),
+                                                                                transforms.RandomVerticalFlip(p=0.5)])
+
+    train_set = FewShotBRSET(transform=train_transform, tasks=tasks, split=args.train_set)
     test_set = FewShotBRSET(transform=transform, tasks=tasks, split='test')
 
     print(f"TRAIN SET SIZE: {len(train_set)}")
@@ -77,6 +83,9 @@ def main():
         total_correct = 0
         total_samples = 0
         num_batch_count = 0
+
+        if args.schedule:
+            opt.param_groups[0]['lr'] = args.learning_rate * (0.1 ** (epoch/20))
 
         for i, (images, labels) in enumerate(train_dataloader):
             images = images.to(device)
