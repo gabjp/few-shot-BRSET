@@ -192,8 +192,8 @@ def main():
                     print(f"[{o_step+1}/{args.outer_steps}] Validation - Loss: {test_loss} Acc: {test_acc}", flush=True)
                     val_acc += test_acc
 
-            # RESTORE MODEL
-            model.load_state_dict(checkpoint)
+                # RESTORE MODEL
+                model.load_state_dict(checkpoint)
 
             val_acc = val_acc / len(val_tasks)
             print(f"Validation accuracy mean {val_acc}")
