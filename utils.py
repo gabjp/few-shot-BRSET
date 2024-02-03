@@ -12,7 +12,6 @@ class DumbNet(nn.Module):
 			nn.BatchNorm2d(64),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
-			
 
 			nn.Conv2d(64, 64, kernel_size=3, stride=1, padding=1),
 			nn.BatchNorm2d(64),
@@ -28,18 +27,9 @@ class DumbNet(nn.Module):
 			nn.BatchNorm2d(64),
 			nn.LeakyReLU(),
 			nn.MaxPool2d(kernel_size=4, stride = 4),
-
 			)
 
-		# self.fc1= nn.Sequential(
-		# 	nn.Linear(1024, 512),
-		# 	nn.LeakyReLU())
-
-		# self.fc2 = nn.Sequential(
-		# 	nn.Linear(512, 256),
-		# 	nn.LeakyReLU())
-
-		self.fc3 = nn.Sequential(
+		self.fc = nn.Sequential(
 			nn.Linear(64, 1))
 		
 		self.m = nn.Sigmoid()
@@ -49,7 +39,7 @@ class DumbNet(nn.Module):
 		out = torch.flatten(out, start_dim=1)
 		#out = self.fc1(out)
 		#out = self.fc2(out)
-		out = self.fc3(out)
+		out = self.fc(out)
 		return torch.flatten(self.m(out))
 
 
