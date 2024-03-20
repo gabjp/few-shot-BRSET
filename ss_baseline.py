@@ -59,13 +59,14 @@ def main():
         os.makedirs(args.save_path)
 
     # Carregar modelo
+    print("Loading model...", flush=True)
     model = timm.create_model(args.model, pretrained=True, num_classes=len(TRAINING_CLASSES))
 
     print(f"Model Parameters: {sum(p.numel() for p in model.parameters() if p.requires_grad)}")
 
     if args.model == "resnet50.a3_in1k" or args.model == "swin_s3_tiny_224.ms_in1k": 
         mean_val, std = (0.485, 0.456, 0.406), (0.229, 0.224, 0.225)
-    elif args.model == "vit_base_patch32_224.augreg_in1k":
+    elif args.model == "vit_small_patch32_224.augreg_in21k_ft_in1k":
         mean_val, std = (0.5, 0.5, 0.5), (0.5, 0.5, 0.5)
 
     # Carregar dados
@@ -151,13 +152,13 @@ def main():
     save_loss(args.save_path, train_loss, test_loss)
 
     # SAVE LISTS
-    with open(args.save_path + 'train_acc.pkl', 'wb') as f:
+    with open(args.save_path + '/train_acc.pkl', 'wb') as f:
         pickle.dump(train_acc, f)
-    with open(args.save_path + 'test_acc.pkl', 'wb') as f:
+    with open(args.save_path + '/test_acc.pkl', 'wb') as f:
         pickle.dump(test_acc, f)
-    with open(args.save_path + 'train_loss.pkl', 'wb') as f:
+    with open(args.save_path + '/train_loss.pkl', 'wb') as f:
         pickle.dump(train_loss, f)
-    with open(args.save_path + 'test_loss.pkl', 'wb') as f:
+    with open(args.save_path + '/test_loss.pkl', 'wb') as f:
         pickle.dump(test_loss, f)
         
     
@@ -217,14 +218,14 @@ def main():
                 
                 max_acc = max(run_test_accs)
                 results[f"{ways}-way-{shots}-shot"].append(max_acc)
-                print(f"[{run + 1}\{args.e_runs}] - {ways}-way-{shots}-shot - Acc: {max_acc} - { time.time() - last_time} s - {class_names}", flush = True)
+                print(f"[{run + 1}/{args.e_runs}] - {ways}-way-{shots}-shot - Acc: {max_acc} - { time.time() - last_time} s - {class_names}", flush = True)
                 #print(run_test_accs)
 
             final_acc = sum(results[f"{ways}-way-{shots}-shot"])/len(results[f"{ways}-way-{shots}-shot"])
             print(f"{ways}-way-{shots}-shot Average Acc: {final_acc}", flush = True)
 
     
-    with open(args.save_path + 'results.pkl', 'wb') as f:
+    with open(args.save_path + '/results.pkl', 'wb') as f:
         pickle.dump(results, f)
 
     print("############################ SUMMARY ############################")
