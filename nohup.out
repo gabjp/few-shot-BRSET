@@ -1,0 +1,9 @@
+Namespace(p_learning_rate=0.001, p_epochs=15, p_batch_size=16, p_l2=0, model='resnet50.a3_in1k', save_path='./experiments/test', e_learning_rate=0.001, e_l2=0, e_runs=50)
+Model Parameters: 23524424
+Class weights: tensor([1.3530, 4.3296, 4.9118, 6.9583, 0.3798, 4.1162, 0.3204, 1.4576])
+[1/15] - Training loss: 1.8091770382057684 - Training accuracy: 32.97690333618477
+[1/15] - Validation loss: 1.6869871580239497 - Validation accuracy: 46.92307692307692
+[1/15] - Epoch took 62.7430624961853 seconds
+[2/15] - Training loss: 1.3815847387086002 - Training accuracy: 50.278015397775874
+[2/15] - Validation loss: 1.4981161085042087 - Validation accuracy: 58.07692307692308
+[2/15] - Epoch took 52.54310059547424 seconds

@@ -203,12 +203,12 @@ def test(testloader, model, criterion, device):
 		label = label.to(device)
 
 		out = model(image)
-		loss = criterion(out, label.float())
+		loss = criterion(out, label)
 
-		predicted = torch.round(out)
+		predicted = torch.argmax(out, axis=1)
 
 		epoch_loss += loss.item()
-		total_correct += (predicted == label).sum().item()
+		total_correct += (predicted == torch.argmax(label, axis=1)).sum().item()
 		total_samples += label.size(0)
 		num_batch_count +=1
 

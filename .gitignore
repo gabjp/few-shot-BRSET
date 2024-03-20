@@ -1,1 +1,4 @@
 data_2/imgs/*
+__pycache__/
+data_2/__pycache__
+experiments/
