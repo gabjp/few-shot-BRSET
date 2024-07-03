@@ -1,10 +1,7 @@
 import torch
 import argparse
 import os
-from data_2.data_manager import BRSETManager
-import torchvision.models as models
-import torch.nn as nn
-from transformers import ViTForImageClassification
+from data.data_manager import BRSETManager
 import timm
 from utils import test, save_acc, save_loss
 import time
@@ -14,8 +11,8 @@ parser = argparse.ArgumentParser()
 device = torch.device("cuda:0" if torch.cuda.is_available() else "cpu")
 
 ###### TRAINING SETTINGS ######
-parser.add_argument("--p-learning-rate", type=float, default=0.001)
-parser.add_argument("--p-epochs", type=int, default=15)
+parser.add_argument("--p-learning-rate", type=float, default=0.0001)
+parser.add_argument("--p-epochs", type=int, default=100)
 parser.add_argument("--p-batch-size", type=int, default=16)
 parser.add_argument("--p-l2", type=float, default=0)
 
@@ -24,12 +21,10 @@ parser.add_argument("--model", type=str, default="")
 parser.add_argument("--save-path", type=str, default="")
 
 ###### EVALUATION SETTINGS ######
-parser.add_argument("--e-learning-rate", type=float, default=0.001)
-#parser.add_argument("--e-epochs", type=int, default=20)
-#parser.add_argument("--e-batch-size", type=int, default=80)
+parser.add_argument("--e-learning-rate", type=float, default=0.0001)
 parser.add_argument("--e-l2", type=float, default=0)
-parser.add_argument("--e-runs", type=int, default=50)
-#parser.add_argument("--e-saving-runs", type=int, default=400)
+parser.add_argument("--e-runs", type=int, default=400)
+
 
 TRAINING_CLASSES = ['diabetic_retinopathy',
                         'scar', 'amd', 'hypertensive_retinopathy', 'drusens', 
@@ -137,6 +132,9 @@ def main():
                 }, args.save_path + "/best_checkpoint.pth")
         
         print(f"[{epoch+1}/{args.p_epochs}] - Epoch took {time.time() - last_time} seconds", flush = True)
+        # SAVE PLOTS
+        save_acc(args.save_path, train_acc, test_acc)
+        save_loss(args.save_path, train_loss, test_loss)
 
     # END TRAINING LOOP
         
@@ -146,10 +144,6 @@ def main():
             'optimizer_state_dict': opt.state_dict(),
             'loss': criterion,
             }, args.save_path + "/last_checkpoint.pth")
-
-    # SAVE PLOTS
-    save_acc(args.save_path, train_acc, test_acc)
-    save_loss(args.save_path, train_loss, test_loss)
 
     # SAVE LISTS
     with open(args.save_path + '/train_acc.pkl', 'wb') as f:
@@ -213,13 +207,14 @@ def main():
                         loss.backward()
                         opt.step()
 
-                        _, test_acc = test(test_loader, model, criterion, device)
-                        run_test_accs.append(test_acc)
+                        with torch.no_grad(): 
+                            _, test_acc = test(test_loader, model, criterion, device)
+                            run_test_accs.append(test_acc)
                 
-                max_acc = max(run_test_accs)
+                max_acc = run_test_accs[-1] 
                 results[f"{ways}-way-{shots}-shot"].append(max_acc)
                 print(f"[{run + 1}/{args.e_runs}] - {ways}-way-{shots}-shot - Acc: {max_acc} - { time.time() - last_time} s - {class_names}", flush = True)
-                #print(run_test_accs)
+                
 
             final_acc = sum(results[f"{ways}-way-{shots}-shot"])/len(results[f"{ways}-way-{shots}-shot"])
             print(f"{ways}-way-{shots}-shot Average Acc: {final_acc}", flush = True)

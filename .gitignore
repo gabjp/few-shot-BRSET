@@ -1,4 +1,7 @@
-data_2/imgs/*
+data/imgs/*
 __pycache__/
-data_2/__pycache__
-experiments/
+data/__pycache__
+data/clean.csv
+data/labels.csv
+deprecated/*
+results/*
