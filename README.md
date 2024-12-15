@@ -2,7 +2,7 @@
 
 Any questions/comments/issues, please feel free to reach out gabrieljp (at) usp (dot) br.
 
-## Instalation 
+## Install
 To install the necessary dependencies for this repo, run
 
 ```
